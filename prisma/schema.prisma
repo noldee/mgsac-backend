@@ -1,0 +1,102 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider  = "postgresql"
+    url       = env("DATABASE_URL")
+    directUrl = env("DIRECT_URL")
+}
+
+enum Role {
+    USER
+    ADMIN
+}
+
+model User {
+    id        String   @id
+    email     String   @unique
+    role      Role     @default(USER)
+    createdAt DateTime @default(now())
+
+    @@map("users")
+}
+
+model Category {
+    id          Int       @id @default(autoincrement())
+    name        String    @unique
+    description String?
+    products    Product[]
+
+    @@map("categories")
+}
+
+model Linea {
+    id          Int       @id @default(autoincrement())
+    name        String    @unique
+    description String?
+    products    Product[]
+
+    @@map("lineas")
+}
+
+model Aroma {
+    id          Int       @id @default(autoincrement())
+    name        String    @unique
+    description String?
+    products    Product[]
+
+    @@map("aromas")
+}
+
+model Formato {
+    id          Int       @id @default(autoincrement())
+    name        String    @unique
+    description String?
+    products    Product[]
+
+    @@map("formatos")
+}
+
+model Product {
+    id            Int      @id @default(autoincrement())
+    views         Int      @default(0) 
+    name          String
+    desc          String
+    precio        Float
+    img           String
+    badge         String?
+    biodegradable Boolean  @default(false)
+    concentrado   Boolean  @default(false)
+    active        Boolean  @default(true)
+    createdAt     DateTime @default(now())
+    updatedAt     DateTime @updatedAt
+
+    categoryId Int
+    category   Category @relation(fields: [categoryId], references: [id])
+
+    lineaId Int
+    linea   Linea @relation(fields: [lineaId], references: [id])
+
+    aromaId Int
+    aroma   Aroma @relation(fields: [aromaId], references: [id])
+
+    formatoId Int
+    formato   Formato @relation(fields: [formatoId], references: [id])
+
+    @@map("products")
+}
+
+model PageView {
+    id        Int      @id @default(autoincrement())
+    path      String
+    createdAt DateTime @default(now())
+
+    @@map("page_views")
+}
