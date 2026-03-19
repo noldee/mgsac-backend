@@ -9,12 +9,11 @@ export class CreateProductDto {
   badge?: string;
   biodegradable?: boolean;
   concentrado?: boolean;
-  categoryId: number;
-  lineaId: number;
-  aromaId: number;
-  formatoId: number;
+  categoryId?: number;
+  lineaId?: number;
+  aromaId?: number;
+  formatoId?: number;
 }
-
 export class UpdateProductDto {
   name?: string;
   desc?: string;
@@ -83,8 +82,23 @@ export class ProductsService {
   }
 
   create(dto: CreateProductDto) {
+    const data: any = {
+      name: dto.name,
+      desc: dto.desc,
+      precio: dto.precio,
+      img: dto.img,
+      badge: dto.badge,
+      biodegradable: dto.biodegradable ?? false,
+      concentrado: dto.concentrado ?? false,
+    };
+
+    if (dto.categoryId) data.categoryId = Number(dto.categoryId);
+    if (dto.lineaId) data.lineaId = Number(dto.lineaId);
+    if (dto.aromaId) data.aromaId = Number(dto.aromaId);
+    if (dto.formatoId) data.formatoId = Number(dto.formatoId);
+
     return this.prisma.product.create({
-      data: dto,
+      data,
       include: {
         category: true,
         linea: true,
@@ -93,7 +107,6 @@ export class ProductsService {
       },
     });
   }
-
   async update(id: number, dto: UpdateProductDto) {
     await this.findOne(id);
     return this.prisma.product.update({

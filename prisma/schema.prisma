@@ -66,7 +66,7 @@ model Formato {
 
 model Product {
     id            Int      @id @default(autoincrement())
-    views         Int      @default(0) 
+    views         Int      @default(0)
     name          String
     desc          String
     precio        Float
@@ -84,11 +84,11 @@ model Product {
     lineaId Int
     linea   Linea @relation(fields: [lineaId], references: [id])
 
-    aromaId Int
-    aroma   Aroma @relation(fields: [aromaId], references: [id])
+    aromaId Int? 
+    aroma   Aroma? @relation(fields: [aromaId], references: [id])
 
-    formatoId Int
-    formato   Formato @relation(fields: [formatoId], references: [id])
+    formatoId Int? 
+    formato   Formato? @relation(fields: [formatoId], references: [id])
 
     @@map("products")
 }
